@@ -1,0 +1,9 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Profile Lab</title><link rel="stylesheet" href="/static/style.css"><script src="/static/app.js" defer></script></head>
+<body><main>
+<header><span class="eyebrow">UNIT 3 · APPLICATION SECURITY TESTING</span><h1>Profile Lab</h1><p>A small application for practicing access control tests.</p><span class="badge">Synthetic data</span></header>
+<section id="login-panel"><h2>Sign in</h2><p>Use the credentials provided by your instructor.</p><form id="login-form"><label for="username">Account</label><select id="username" name="username"><option>alice</option><option>bob</option><option>admin</option></select><label for="password">Password</label><input id="password" name="password" type="password" autocomplete="current-password" required><button type="submit">Sign in</button></form></section>
+<section id="profile-panel" hidden><div class="row"><h2>Your session</h2><button id="logout" class="secondary">Sign out</button></div><p id="identity"></p><label for="profile-id">Profile to view</label><div class="row"><select id="profile-id"><option value="1">Alice · Profile 1</option><option value="2">Bob · Profile 2</option><option value="3">Instructor · Profile 3</option></select><button id="load">View profile</button></div><p class="hint">Users can access their own profile. Administrators can access all profiles.</p><article id="profile" hidden><h3 id="name"></h3><p id="team"></p><label for="bio">Bio</label><textarea id="bio" maxlength="200" rows="3"></textarea><button id="save">Save bio</button></article></section>
+<p id="status" role="status" aria-live="polite"></p><footer>Profile changes reset when the application restarts.</footer>
+</main></body></html>
