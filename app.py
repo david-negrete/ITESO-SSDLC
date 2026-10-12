@@ -24,6 +24,7 @@ def create_app(config=None):
     )
     if config:
         app.config.update(config)
+    instance_id = secrets.token_hex(12)
     if not app.config['SECRET_KEY'] or len(app.config['SECRET_KEY']) < 32:
         raise ValueError('APP_SECRET_KEY must contain at least 32 characters.')
     for key in ('ALICE_PASSWORD', 'BOB_PASSWORD', 'ADMIN_PASSWORD'):
@@ -78,7 +79,7 @@ def create_app(config=None):
 
     @app.get('/health')
     def health():
-        return jsonify(status='ok', revision=os.environ.get('RENDER_GIT_COMMIT', 'local'))
+        return jsonify(status='ok', revision=os.environ.get('RENDER_GIT_COMMIT', 'local'), instance=instance_id)
 
     @app.get('/api/csrf')
     def csrf():

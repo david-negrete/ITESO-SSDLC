@@ -24,6 +24,14 @@ class ProfileSecurityTests(unittest.TestCase):
         self.assertEqual(self.login().status_code, 200)
         self.assertEqual(self.client.get('/api/me').json['id'], 1)
 
+    def test_TC_DEPLOY_01_health_identifies_running_instance(self):
+        first = self.client.get('/health')
+        second = self.client.get('/health')
+        self.assertEqual(first.status_code, 200)
+        self.assertEqual(first.json['status'], 'ok')
+        self.assertEqual(first.json['instance'], second.json['instance'])
+        self.assertEqual(len(first.json['instance']), 24)
+
     def test_TC_AUTH_02_generic_bad_credentials(self):
         known = self.send('/api/login', data={'username': 'alice', 'password': 'wrong'})
         unknown = self.send('/api/login', data={'username': 'unknown', 'password': 'wrong'})
