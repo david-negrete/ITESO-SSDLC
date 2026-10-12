@@ -1,14 +1,14 @@
 # Profile Lab
 
-Aplicación para demostrar cómo integrar casos de prueba de seguridad y escaneos en un pipeline. UI en inglés; guía de clase en español. Solo contiene perfiles sintéticos.
+A classroom application for integrating security test cases and security scanning into a delivery pipeline. All accounts and profiles use synthetic data.
 
 - App: https://profile-security-classroom.onrender.com
-- Repositorio: https://github.com/david-negrete/ITESO-SSDLC
+- Repository: https://github.com/david-negrete/ITESO-SSDLC
 - Pipeline: https://github.com/david-negrete/ITESO-SSDLC/actions/workflows/security.yml
 
-## Ejecutar localmente
+## Run locally
 
-Requiere Python 3.12 y acceso a PyPI para instalar dependencias.
+Requires Python 3.12 and access to PyPI to install dependencies.
 
 ```powershell
 python -m venv .venv
@@ -17,11 +17,11 @@ python -m pip install -r requirements.txt
 python run_local.py
 ```
 
-Abre http://127.0.0.1:5000. La consola muestra contraseñas temporales para `alice`, `bob` y `admin`. Cada reinicio genera otras. El servidor local escucha únicamente en loopback.
+Open http://127.0.0.1:5000. The console displays temporary passwords for `alice`, `bob`, and `admin`. Each restart generates new local credentials. The local server listens only on loopback.
 
-Un usuario puede leer y modificar su propio perfil. Un administrador puede acceder a todos los perfiles. Solo se puede editar `bio`; el cliente no puede cambiar roles ni IDs. Los datos, sesiones y límites de intentos se guardan en memoria y se reinician con el servicio. Por eso el despliegue usa un solo worker. Esta app está diseñada para una demostración pequeña, sin datos reales.
+Users can read and update their own profile. Administrators can access every profile. Only `bio` can be edited; clients cannot change roles or IDs. Profiles, sessions, and login attempt limits are stored in memory and reset when the service restarts. The deployment therefore uses one worker. This application is intended for a small demonstration with synthetic data.
 
-## Ejecutar pruebas y escaneos
+## Run tests and scans
 
 ```powershell
 python scripts/run_tests.py
@@ -30,45 +30,45 @@ python -m bandit app.py wsgi.py -f json -o reports/bandit.json
 python -m pip_audit -r requirements.txt -f json -o reports/sca.json
 ```
 
-Los casos tienen IDs visibles, como `TC_AUTHZ_02_other_profile_is_denied`. La matriz en `docs/test-cases.csv` explica precondiciones, acciones, resultados esperados y referencias. El resultado resumido está en `reports/tests.json`.
+Test cases have visible IDs, such as `TC_AUTHZ_02_other_profile_is_denied`. The matrix in `docs/test-cases.csv` lists preconditions, actions, expected results, and references. The summary report is written to `reports/tests.json`.
 
-## Pipeline en GitHub Actions
+## GitHub Actions pipeline
 
-El repositorio de destino es `david-negrete/ITESO-SSDLC`, con rama principal `main`. Conserva la estructura de carpetas, incluida `.github/`. Se requieren permisos de escritura y GitHub Actions habilitado.
+The repository is `david-negrete/ITESO-SSDLC`, with `main` as its default branch. Preserve the folder structure, including `.github/`. Repository write access and GitHub Actions are required to configure the pipeline.
 
-El workflow `Classroom security pipeline` corre en pushes a `main`, pull requests y ejecuciones manuales:
+The `Classroom security pipeline` workflow runs on pushes to `main`, pull requests, and manual executions:
 
-1. **Functional and security test cases:** ejecuta los casos automatizados.
-2. **SAST - Bandit:** analiza `app.py` y `wsgi.py`; cualquier hallazgo hace fallar el job.
-3. **SCA - pip-audit:** consulta vulnerabilidades conocidas de las dependencias runtime, incluidas las transitivas resueltas. Cualquier vulnerabilidad reportada hace fallar el job.
-4. **Secret scanning - Gitleaks:** escanea el historial Git. Los reportes se redactan para no mostrar secretos detectados.
-5. **DAST - ZAP:** inicia una app temporal y hace un baseline pasivo de las rutas públicas. Falta de CSP o de X-Content-Type-Options se configura como FAIL; otros avisos quedan en el reporte. Un error del escáner también hace fallar el job.
-6. **Deploy:** solo puede correr en `main`, cuando pasan los jobs anteriores y se configura `DEPLOY_ENABLED=true`.
+1. **Functional and security test cases:** runs the automated cases.
+2. **SAST - Bandit:** analyzes `app.py` and `wsgi.py`. Any reported finding fails the job.
+3. **SCA - pip-audit:** checks runtime dependencies, including resolved transitive dependencies, for known vulnerabilities. Any reported vulnerability fails the job.
+4. **Secret scanning - Gitleaks:** scans Git history. Reports redact detected secrets.
+5. **DAST - ZAP:** starts a temporary application and performs a passive baseline scan of public routes. Missing CSP or X-Content-Type-Options headers are configured as FAIL. Other warnings remain in the report. Scanner errors also fail the job.
+6. **Deploy:** runs only on `main`, after the preceding jobs pass and `DEPLOY_ENABLED=true` is configured.
 
-Los jobs de escaneo guardan evidencia descargable como artifacts. SAST, SCA y secretos corren en paralelo con las pruebas. DAST espera a que las pruebas pasen. ZAP no inicia sesión y no verifica los perfiles privados: los casos de autorización cubren ese comportamiento. Un escaneo exitoso no implica cumplimiento completo de ASVS.
+Scan jobs save downloadable evidence as artifacts. SAST, SCA, and secret scanning run in parallel with the tests. DAST waits for the tests to pass. ZAP does not authenticate or test private profiles; authorization test cases verify that behavior. A successful scan does not establish full ASVS compliance.
 
-Las herramientas de CI se instalan en los runners. No son dependencias de la app. Las versiones de dependencias runtime están fijadas; el contenedor ZAP usa su canal `stable` y las acciones usan tags de versión mayor. Para congelar una clase reproducible a largo plazo, registra/pina los SHA/digests después del primer run exitoso.
+CI tools are installed on the runners, rather than included in runtime dependencies. Runtime dependency versions are pinned. ZAP uses its `stable` image channel, and Actions use major-version tags. To freeze the classroom environment for long-term reproducibility, record and pin action SHAs and image digests after a successful run.
 
-## Demostrar la regresión de autorización
+## Demonstrate an authorization regression
 
-En **Actions → Classroom security pipeline → Run workflow**, selecciona `authorization-regression`.
+Open **Actions → Classroom security pipeline → Run workflow** and select `authorization-regression`.
 
-El workflow modifica la condición de autorización únicamente en su checkout temporal. Muestra el diff y ejecuta la misma suite. Deben fallar los casos que impiden leer o editar otro perfil. No cambia el repositorio ni la aplicación pública. DAST y despliegue quedan bloqueados. Después ejecuta `baseline` para mostrar los mismos casos pasando.
+The workflow changes the authorization condition only in its temporary checkout, shows the diff, and runs the same test suite. Cases that prevent reading or modifying another user's profile should fail. The repository and public application remain unaffected. DAST and deployment are blocked. Run `baseline` afterward to show the same cases passing.
 
-Esta comparación representa dos estados de código en runners aislados. No simula una publicación ni inventa resultados de los escáneres.
+This compares two code states in isolated runners. Use actual test and scanner results as classroom evidence.
 
-## Publicar en Render
+## Deploy on Render
 
-1. Conecta tu repositorio a Render e importa `render.yaml` como Blueprint. Revisa el plan antes de crear el servicio. El archivo solicita `free`, sujeto a disponibilidad de tu cuenta.
-2. Render genera las contraseñas de los tres usuarios y la clave de sesión. Consulta las contraseñas en la configuración del servicio y comparte solo las de las cuentas sintéticas necesarias para la clase.
-3. El primer despliegue al crear el servicio se hace desde Render. Los siguientes quedan con auto-deploy apagado, para que los controle GitHub Actions.
-4. En GitHub, crea el environment `classroom`. Dentro de él, agrega el secret `RENDER_DEPLOY_HOOK` con el deploy hook de Render, y la variable `APP_URL` con la URL HTTPS del servicio. El hook es un secreto: no lo pegues en archivos, tickets ni chat.
-5. En las variables del repositorio, agrega `DEPLOY_ENABLED=true` cuando quieras habilitar los despliegues del pipeline.
-6. Ejecuta `baseline` desde `main`. El job solicita a Render desplegar exactamente el commit verificado y consulta `/health` hasta que la revisión coincide y cambia la instancia en ejecución. Esto también comprueba un reinicio cuando se vuelve a desplegar el mismo commit.
+1. Import `render.yaml` as a Render Blueprint from the repository. Review the plan before creating the service. The file requests `free`, subject to availability on your account.
+2. Render generates the three account passwords and session signing key. Retrieve them from the service's Environment page. Share only the synthetic account passwords needed for class.
+3. Render performs the initial deployment when the service is created. Auto-deploy is disabled so GitHub Actions controls subsequent deployments.
+4. Create the GitHub environment `classroom`. Add the secret `RENDER_DEPLOY_HOOK` with the Render deploy hook, and the variable `APP_URL` with the service's HTTPS URL. The hook is a secret; keep it out of source files, tickets, and chat messages.
+5. Add the repository variable `DEPLOY_ENABLED=true` to enable pipeline deployments.
+6. Run `baseline` from `main`. The job requests deployment of the tested commit, then polls `/health` until the revision matches and the running instance changes. This also verifies a restart when the same commit is redeployed.
 
-No actives `APP_LOCAL_HTTP` en Render. El servicio público exige cookies Secure y HSTS. Sesiones anteriores se invalidan después de un reinicio. Si el primer arranque tarda, abre la app antes de la clase.
+Do not enable `APP_LOCAL_HTTP` on Render. The public service uses Secure cookies and HSTS. Restarts invalidate existing sessions. Open the app before class to allow the free instance to wake up if needed.
 
-## Fuentes
+## References
 
 - [ASVS 5.0.0](https://github.com/OWASP/ASVS/tree/v5.0.0/5.0/en)
 - [WSTG 4.2](https://wstg.owasp.org/v4.2/)
