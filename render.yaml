@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: profile-security-classroom
+    runtime: python
+    plan: free
+    branch: main
+    autoDeployTrigger: off
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn wsgi:app --bind 0.0.0.0:$PORT --workers 1 --threads 4
+    healthCheckPath: /health
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.12
+      - key: APP_SECRET_KEY
+        generateValue: true
+      - key: ALICE_PASSWORD
+        generateValue: true
+      - key: BOB_PASSWORD
+        generateValue: true
+      - key: ADMIN_PASSWORD
+        generateValue: true
