@@ -18,3 +18,4 @@ TC-SESS-04,Production cookie mode enabled,Obtain session cookie,Secure HttpOnly 
 TC-INPUT-01,Alice authenticated,Submit bio exceeding 200 characters or non-text values,400,v5.0.0-2.2.1,WSTG-v42-BUSL-01
 TC-INPUT-02,Client with valid CSRF token,Submit a JSON array instead of an object,400,v5.0.0-2.2.1,WSTG-v42-BUSL-01
 TC-HEADERS-01,Application running,Request home page,CSP frame-ancestors nosniff and no-store present,v5.0.0-3.4.6; v5.0.0-3.4.4; v5.0.0-14.3.2,WSTG-v42-CLNT-09; WSTG-v42-ATHN-06
+TC-DEPLOY-01,Application running,Request health twice,Stable instance ID and healthy status,Engineering deployment check; no ASVS claim,No dedicated WSTG mapping
