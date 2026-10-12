@@ -1,9 +1,21 @@
 <!doctype html>
 <html lang="en">
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Profile Lab</title><link rel="stylesheet" href="/static/style.css"><script src="/static/app.js" defer></script></head>
-<body><main>
-<header><span class="eyebrow">UNIT 3 · APPLICATION SECURITY TESTING</span><h1>Profile Lab</h1><p>A small application for practicing access control tests.</p><span class="badge">Synthetic data</span></header>
-<section id="login-panel"><h2>Sign in</h2><p>Use the credentials provided by your instructor.</p><form id="login-form"><label for="username">Account</label><select id="username" name="username"><option>alice</option><option>bob</option><option>admin</option></select><label for="password">Password</label><input id="password" name="password" type="password" autocomplete="current-password" required><button type="submit">Sign in</button></form></section>
-<section id="profile-panel" hidden><div class="row"><h2>Your session</h2><button id="logout" class="secondary">Sign out</button></div><p id="identity"></p><label for="profile-id">Profile to view</label><div class="row"><select id="profile-id"><option value="1">Alice · Profile 1</option><option value="2">Bob · Profile 2</option><option value="3">Instructor · Profile 3</option></select><button id="load">View profile</button></div><p class="hint">Users can access their own profile. Administrators can access all profiles.</p><article id="profile" hidden><h3 id="name"></h3><p id="team"></p><label for="bio">Bio</label><textarea id="bio" maxlength="200" rows="3"></textarea><button id="save">Save bio</button></article></section>
-<p id="status" role="status" aria-live="polite"></p><footer>Profile changes reset when the application restarts.</footer>
-</main></body></html>
+<body>
+<aside class="rail" aria-label="Application identity">
+  <a class="brand" href="/" aria-label="Profile Lab home"><span class="brand-mark" aria-hidden="true">PL</span><span>PROFILE<br>LAB</span></a>
+  <div class="rail-section"><span class="rail-label">WORKSPACE</span><span class="rail-current"><span aria-hidden="true">↗</span> People &amp; profiles</span></div>
+  <div class="rail-bottom"><span class="rail-label">CLASSROOM EDITION</span><p>Application security<br>testing · Unit 3</p></div>
+</aside>
+<main>
+  <div class="topbar"><span>PEOPLE DIRECTORY</span><span class="environment"><span aria-hidden="true"></span> Synthetic data</span></div>
+  <header><span class="eyebrow">01 / ACCESS CONTROL</span><h1>Profile<br><span>directory.</span></h1><p>Explore a profile, update a bio, and check who can access what.</p></header>
+  <div class="workspace">
+    <section id="login-panel"><div class="section-heading"><span class="section-number" aria-hidden="true">01</span><h2>Enter the workspace</h2></div><p class="intro">Choose an account and enter the password provided by your instructor.</p><form id="login-form"><label for="username">Account</label><select id="username" name="username"><option>alice</option><option>bob</option><option>admin</option></select><label for="password">Password</label><input id="password" name="password" type="password" autocomplete="current-password" required><button type="submit">Sign in <span aria-hidden="true">↗</span></button></form></section>
+    <section id="profile-panel" hidden><div class="row section-heading"><div class="row"><span class="section-number" aria-hidden="true">01</span><h2>Profile workspace</h2></div><button id="logout" class="secondary">Sign out</button></div><p id="identity"></p><label for="profile-id">Profile to view</label><div class="row request-row"><select id="profile-id"><option value="1">Alice · Profile 1</option><option value="2">Bob · Profile 2</option><option value="3">Instructor · Profile 3</option></select><button id="load">View profile <span aria-hidden="true">↗</span></button></div><p class="hint">Select a profile to check access.</p><article id="profile" hidden><span class="eyebrow">DIRECTORY RECORD</span><h3 id="name"></h3><p id="team"></p><label for="bio">Bio</label><textarea id="bio" maxlength="200" rows="3"></textarea><button id="save">Save bio <span aria-hidden="true">↗</span></button></article></section>
+    <aside class="policy" aria-labelledby="policy-title"><span class="eyebrow">ACCESS POLICY</span><h2 id="policy-title">Who can<br>see what?</h2><dl><dt>Users</dt><dd>Read and edit their own profile.</dd><dt>Administrators</dt><dd>Access every profile.</dd></dl><div class="policy-note">Start with an allowed request.<br>Then try another user's profile.</div></aside>
+  </div>
+  <div class="response"><span class="response-label">REQUEST RESULT</span><p id="status" role="status" aria-live="polite"></p></div>
+  <footer><span>PROFILE LAB / CLASSROOM DEMO</span><span>Profile changes reset when the application restarts.</span></footer>
+</main>
+</body></html>
