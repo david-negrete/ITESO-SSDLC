@@ -1,0 +1,20 @@
+Test ID,Preconditions,Action,Expected result,Related ASVS 5.0.0,Related WSTG 4.2
+TC-AUTH-01,Valid Alice credentials,Log in and request current identity,200 and Alice identity,v5.0.0-6.3.4,WSTG-v42-ATHN-04
+TC-AUTH-02,Unauthenticated client,Try wrong password for known and unknown accounts,Same generic 401 response,v5.0.0-6.3.8,WSTG-v42-IDNT-04
+TC-AUTH-03,Unauthenticated client,Request profile 1,401 with no profile data,v5.0.0-8.2.2,WSTG-v42-ATHZ-02
+TC-AUTH-04,Unauthenticated client,Make repeated wrong-password attempts,Further attempts rate-limited after five,v5.0.0-6.3.1,WSTG-v42-ATHN-03
+TC-AUTHZ-01,Alice authenticated,Read profile 1,200 with Alice profile,v5.0.0-8.2.2,WSTG-v42-ATHZ-04
+TC-AUTHZ-02,Alice authenticated,Read profile 2,403 without Bob profile data,v5.0.0-8.2.2,WSTG-v42-ATHZ-04
+TC-AUTHZ-03,Alice authenticated,Update Bob bio then inspect as Bob,403 and Bob bio unchanged,v5.0.0-8.2.2,WSTG-v42-ATHZ-04
+TC-AUTHZ-04,Alice authenticated,Update own bio,200 and updated bio,v5.0.0-8.2.2,WSTG-v42-ATHZ-04
+TC-AUTHZ-05,Administrator authenticated,Read Bob profile,200 according to administrator policy,v5.0.0-8.2.1,WSTG-v42-ATHZ-02
+TC-AUTHZ-06,Alice authenticated,Submit role field along with bio,400 and no privilege change,v5.0.0-15.3.3,WSTG-v42-ATHZ-03
+TC-CSRF-01,Client has no CSRF token,Submit valid login credentials,403,v5.0.0-3.5.1,WSTG-v42-SESS-05
+TC-CSRF-02,Alice authenticated,Update bio without CSRF token,403,v5.0.0-3.5.1,WSTG-v42-SESS-05
+TC-SESS-01,Alice authenticated and cookie copied,Log out then replay copied cookie,401 for replay,v5.0.0-7.4.1,WSTG-v42-SESS-06
+TC-SESS-02,Alice authenticated and cookie copied,Authenticate again then replay old cookie,New cookie issued and old cookie rejected,v5.0.0-7.2.4,WSTG-v42-SESS-03
+TC-SESS-03,Alice authenticated,Advance server time beyond absolute lifetime,401,v5.0.0-7.3.2,WSTG-v42-SESS-07
+TC-SESS-04,Production cookie mode enabled,Obtain session cookie,Secure HttpOnly SameSite=Lax and HSTS present,v5.0.0-3.3.1; v5.0.0-3.3.2; v5.0.0-3.3.4,WSTG-v42-SESS-02
+TC-INPUT-01,Alice authenticated,Submit bio exceeding 200 characters or non-text values,400,v5.0.0-2.2.1,WSTG-v42-BUSL-01
+TC-INPUT-02,Client with valid CSRF token,Submit a JSON array instead of an object,400,v5.0.0-2.2.1,WSTG-v42-BUSL-01
+TC-HEADERS-01,Application running,Request home page,CSP frame-ancestors nosniff and no-store present,v5.0.0-3.4.6; v5.0.0-3.4.4; v5.0.0-14.3.2,WSTG-v42-CLNT-09; WSTG-v42-ATHN-06
