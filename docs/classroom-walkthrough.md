@@ -1,37 +1,37 @@
-# Demo de clase, 15 minutos
+# Classroom walkthrough, 15 minutes
 
-## 0–3 min: política y comportamiento
+## 0–3 minutes: policy and application behavior
 
-Entra como Alice. Abre Profile 1: respuesta 200. Intenta abrir Profile 2: respuesta 403. Pregunta qué debe pasar antes de ejecutar el segundo caso. La política es explícita: un usuario solo puede acceder a su propio perfil; el instructor tiene rol administrador.
+Sign in as Alice. Open Profile 1: expect a 200 response. Try Profile 2: expect a 403 response. Ask students to predict the outcome before making the second request. The policy is explicit: users can access only their own profile; the instructor has the administrator role.
 
-## 3–6 min: de ASVS al caso
+## 3–6 minutes: from ASVS to a test case
 
-Abre `docs/test-cases.csv`. Usa TC-AUTHZ-02. Muestra la relación con ASVS v5.0.0-8.2.2 y WSTG-v42-ATHZ-04. Explica que el requisito establece la expectativa de autorización y WSTG aporta técnicas para investigar referencias a objetos. El caso concreta usuario, recurso, acción y resultado esperado.
+Open `docs/test-cases.csv` and use TC-AUTHZ-02. Explain its relationship to ASVS v5.0.0-8.2.2 and WSTG-v42-ATHZ-04. The requirement establishes the authorization expectation. WSTG provides techniques for investigating object references. The application-specific case identifies the user, resource, action, and expected result.
 
-Abre el test correspondiente en `tests/test_security.py`: hay una aserción para 403 y otras para verificar que no se devuelve el contenido protegido. No basta con comprobar que la pantalla muestra un mensaje de error.
+Open the corresponding test in `tests/test_security.py`. It asserts a 403 response and verifies that protected profile fields are absent. An error message on screen alone is insufficient evidence.
 
-## 6–10 min: un cambio falla
+## 6–10 minutes: a change fails verification
 
-En Actions ejecuta `authorization-regression`. Abre el diff de la condición de autorización y el job de pruebas. Muestra TC_AUTHZ_02 y TC_AUTHZ_03 fallando. Descarga `test-case-results` si quieres revisar la evidencia fuera del log. El código vulnerable solo existe en el runner de esa ejecución.
+Run `authorization-regression` in Actions. Open the authorization diff and test job. Show TC_AUTHZ_02 and TC_AUTHZ_03 failing. Download `test-case-results` to inspect the evidence outside the log. The vulnerable code exists only in that execution's temporary runner.
 
-Puedes preparar este run antes de clase y abrirlo mientras termina una ejecución en vivo. Usa únicamente evidencia de runs reales; no sustituyas resultados por capturas inventadas.
+Prepare this run before class as a backup while a live execution finishes. Use evidence from real runs.
 
-## 10–13 min: escaneos
+## 10–13 minutes: security scanning
 
-Abre un run `baseline` exitoso. Compara Bandit, pip-audit, Gitleaks y ZAP. Explica qué entrada recibe cada herramienta y muestra un artifact real. Bandit no conoce la política de quién puede leer cada perfil. Una prueba de autorización que falla puede aportar evidencia que un escáner genérico no encuentra.
+Open a successful `baseline` run. Compare Bandit, pip-audit, Gitleaks, and ZAP. Explain the input each tool receives and show an actual report artifact. Bandit does not know which user is allowed to read each profile. An application-specific authorization test can reveal a failure that a generic scanner misses.
 
-El baseline de ZAP es pasivo y sin autenticación. Revisa las advertencias, aunque no todas bloqueen el job. Distingue una vulnerabilidad, una advertencia y un error del escáner.
+The ZAP baseline is passive and unauthenticated. Review warnings even when they do not block the job. Distinguish a vulnerability finding, a warning, and a scanner execution error.
 
-## 13–15 min: despliegue
+## 13–15 minutes: deployment
 
-Si Render ya está conectado, abre el job Deploy. Muestra que necesita los jobs previos y que compara la revisión de `/health` con el commit probado. Abre la app y repite acceso permitido/denegado.
+Open the Deploy job. Show its dependencies on the preceding checks and how it verifies the running revision against the tested commit, including a change of instance. Open the app and repeat the allowed and denied profile requests.
 
-Si Render todavía no está conectado, el job aparece omitido. Explícalo tal cual; no presentes ese estado como un despliegue exitoso.
+If deployment is not configured, the job is skipped. Explain that state accurately.
 
-## Preparación
+## Before class
 
-- Verifica credenciales y abre la app antes de iniciar la clase.
-- Ten un baseline y una regresión de autorización ejecutados y disponibles.
-- Revisa que no se haya agregado un advisory nuevo que haga fallar SCA; actualiza la dependencia y repite el pipeline si ocurre.
-- No muestres el deploy hook, la clave de sesión ni la contraseña de administrador en pantalla.
-- Reserva SecureEnough para la actividad evaluada. Esta demo usa Profile Lab.
+- Verify the account credentials and open the app before the session.
+- Keep a completed baseline run and authorization regression available.
+- Check whether a new dependency advisory causes SCA to fail. Update the affected dependency and repeat verification if necessary.
+- Keep the deploy hook, session signing key, and administrator password off the shared screen.
+- Reserve SecureEnough for the assessed activity. This demonstration uses Profile Lab.
