@@ -13,6 +13,12 @@ if urllib.parse.urlparse(hook).scheme != 'https' or not hook.startswith('https:/
 if not base.startswith('https://'):
     raise SystemExit('APP_URL must use HTTPS.')
 separator = '&' if '?' in hook else '?'
+previous_instance = None
+try:
+    with urllib.request.urlopen(base + '/health', timeout=15) as response:
+        previous_instance = json.load(response).get('instance')
+except (OSError, ValueError):
+    pass
 try:
     with urllib.request.urlopen(hook + separator + urllib.parse.urlencode({'ref': revision}), timeout=30) as response:
         if response.status not in (200, 202):
@@ -23,7 +29,7 @@ for _ in range(90):
     try:
         with urllib.request.urlopen(base + '/health', timeout=15) as response:
             data = json.load(response)
-        if data.get('status') == 'ok' and data.get('revision') == revision:
+        if data.get('status') == 'ok' and data.get('revision') == revision and data.get('instance') and data['instance'] != previous_instance:
             print('Deployment verified: running revision matches the tested commit.')
             break
     except (OSError, ValueError):
