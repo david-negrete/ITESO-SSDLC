@@ -2,6 +2,10 @@
 
 Aplicación para demostrar cómo integrar casos de prueba de seguridad y escaneos en un pipeline. UI en inglés; guía de clase en español. Solo contiene perfiles sintéticos.
 
+- App: https://profile-security-classroom.onrender.com
+- Repositorio: https://github.com/david-negrete/ITESO-SSDLC
+- Pipeline: https://github.com/david-negrete/ITESO-SSDLC/actions/workflows/security.yml
+
 ## Ejecutar localmente
 
 Requiere Python 3.12 y acceso a PyPI para instalar dependencias.
@@ -60,7 +64,7 @@ Esta comparación representa dos estados de código en runners aislados. No simu
 3. El primer despliegue al crear el servicio se hace desde Render. Los siguientes quedan con auto-deploy apagado, para que los controle GitHub Actions.
 4. En GitHub, crea el environment `classroom`. Dentro de él, agrega el secret `RENDER_DEPLOY_HOOK` con el deploy hook de Render, y la variable `APP_URL` con la URL HTTPS del servicio. El hook es un secreto: no lo pegues en archivos, tickets ni chat.
 5. En las variables del repositorio, agrega `DEPLOY_ENABLED=true` cuando quieras habilitar los despliegues del pipeline.
-6. Ejecuta `baseline` desde `main`. El job solicita a Render desplegar exactamente el commit verificado y consulta `/health` hasta que la revisión coincide. Solo entonces declara el despliegue exitoso.
+6. Ejecuta `baseline` desde `main`. El job solicita a Render desplegar exactamente el commit verificado y consulta `/health` hasta que la revisión coincide y cambia la instancia en ejecución. Esto también comprueba un reinicio cuando se vuelve a desplegar el mismo commit.
 
 No actives `APP_LOCAL_HTTP` en Render. El servicio público exige cookies Secure y HSTS. Sesiones anteriores se invalidan después de un reinicio. Si el primer arranque tarda, abre la app antes de la clase.
 
