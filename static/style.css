@@ -1,0 +1,12 @@
+:root { font-family: system-ui, sans-serif; color: #192c42; background: #f1f5fa; }
+* { box-sizing: border-box; } body { margin: 0; } main { max-width: 760px; margin: 48px auto; padding: 0 24px; }
+header { margin-bottom: 30px; } h1 { font-size: 48px; margin: 12px 0; letter-spacing: -2px; } h2 { font-size: 22px; margin-top: 0; }
+p { line-height: 1.6; } .eyebrow { font-size: 12px; font-weight: 700; letter-spacing: 1px; color: #395570; } .badge { display: inline-block; background: #dcefe9; color: #175341; padding: 5px 12px; border-radius: 20px; font-size: 13px; }
+section { background: white; border: 1px solid #d7e0ea; border-radius: 18px; padding: 28px; box-shadow: 0 12px 32px #22364c08; }
+label { display: block; font-weight: 600; margin: 18px 0 8px; } input, select, textarea { font: inherit; padding: 12px; border: 1px solid #a3b1c1; border-radius: 8px; width: 100%; background: white; color: #192c42; }
+button { font: inherit; font-weight: 600; background: #194d86; color: white; border: 0; border-radius: 8px; padding: 12px 20px; cursor: pointer; margin-top: 18px; white-space: nowrap; }
+button:hover { background: #123b67; } button.secondary { background: #e6edf5; color: #192c42; margin: 0; }
+.row { display: flex; align-items: center; gap: 16px; justify-content: space-between; } .row button { margin: 0; } .row h2 { margin: 0; }
+article { border-top: 1px solid #d7e0ea; margin-top: 24px; padding-top: 16px; } .hint, footer { font-size: 13px; color: #52657a; }
+#status { padding: 12px 0; min-height: 40px; } .error { color: #9a2222; } .success { color: #176043; } :focus-visible { outline: 3px solid #007fa8; outline-offset: 3px; }
+[hidden] { display: none !important; } @media (max-width: 500px) { main { margin: 24px auto; } h1 { font-size: 38px; } section { padding: 20px; } }
