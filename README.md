@@ -6,6 +6,12 @@ A classroom application for integrating security test cases and security scannin
 - Repository: https://github.com/david-negrete/ITESO-SSDLC
 - Pipeline: https://github.com/david-negrete/ITESO-SSDLC/actions/workflows/security.yml
 
+## Students: start here
+
+Follow the [Student Setup Guide](docs/student-setup.md) to fork this repository into your own GitHub account, enable Actions, run the baseline and authorization-regression scenarios, and inspect the reports. No local Python or Docker installation is required for the GitHub-only exercise. Render deployment is optional and uses your own service and credentials.
+
+The application and pipeline links above belong to the instructor's project. Use your fork for the exercise; it does not inherit the instructor's deployment credentials. Leave `DEPLOY_ENABLED` unset or `false` until you configure your own deployment.
+
 ## Run locally
 
 Requires Python 3.12 and access to PyPI to install dependencies.
