@@ -1,5 +1,5 @@
 name: Classroom security pipeline
-run-name: "${{ github.event_name == 'workflow_dispatch' && format('Classroom scenario - {0}', inputs.scenario) || github.event.head_commit.message || github.event.pull_request.title || 'Classroom security pipeline' }}"
+run-name: "${{ github.event_name == 'workflow_dispatch' && inputs.exercise_id != '' && format('Classroom exercise {0}', inputs.exercise_id) || github.event_name == 'workflow_dispatch' && format('Classroom scenario - {0}', inputs.scenario) || github.event.head_commit.message || github.event.pull_request.title || 'Classroom security pipeline' }}"
 on:
   push:
     branches: [main]
@@ -9,12 +9,16 @@ on:
       scenario:
         description: Classroom scenario (only baseline can deploy)
         type: choice
-        options: [baseline, authorization-regression, validation-regression, csrf-test-setup-error]
+        options: [baseline, authorization-regression, validation-regression, csrf-test-setup-error, logout-revocation-regression, session-expiration-regression, session-rotation-regression, protected-field-regression, admin-access-regression, cache-policy-regression]
         default: baseline
+      exercise_id:
+        description: Optional exercise label (for example 01 or Reference)
+        type: string
+        default: ''
 permissions:
   contents: read
 concurrency:
-  group: classroom-${{ github.ref }}
+  group: classroom-${{ github.event_name == 'workflow_dispatch' && github.run_id || github.ref }}
   cancel-in-progress: false
 jobs:
   tests:
