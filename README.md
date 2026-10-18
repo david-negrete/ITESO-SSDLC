@@ -55,11 +55,18 @@ Scan jobs save downloadable evidence as artifacts. SAST, SCA, and secret scannin
 
 CI tools are installed on the runners, rather than included in runtime dependencies. Runtime dependency versions are pinned. ZAP uses its `stable` image channel, and Actions use major-version tags. To freeze the classroom environment for long-term reproducibility, record and pin action SHAs and image digests after a successful run.
 
-## Demonstrate an authorization regression
+## Demonstrate isolated classroom failures
 
-Open **Actions → Classroom security pipeline → Run workflow** and select `authorization-regression`.
+Open **Actions → Classroom security pipeline → Run workflow** on `main` and choose a scenario:
 
-The workflow changes the authorization condition only in its temporary checkout, shows the diff, and runs the same test suite. Cases that prevent reading or modifying another user's profile should fail. The repository and public application remain unaffected. DAST and deployment are blocked. Run `baseline` afterward to show the same cases passing.
+| Scenario | Temporary change | Expected test evidence |
+| --- | --- | --- |
+| `baseline` | None | All 20 starting cases pass, subject to actual results |
+| `authorization-regression` | Removes effective ownership rejection | Other-profile access and modification tests fail |
+| `validation-regression` | Removes the 200-character bio limit, preserving the text-type check | `test_TC_INPUT_01_bio_limit_and_type` fails for a 201-character string: actual 200, expected 400 |
+| `csrf-test-setup-error` | Omits CSRF only in the owner-update test request; application unchanged | `test_TC_AUTHZ_04_owner_can_update` fails: actual 403, expected 200 |
+
+The tests job changes only its own temporary checkout and shows the diff in **Apply isolated teaching scenario**. Read **Verify application behavior** for failed assertions and download `test-case-results`. The CSRF scenario demonstrates incorrect test preparation, rather than an application defect. Independent scanner jobs inspect their own unchanged checkouts. DAST and deployment are skipped when tests fail; deployment also explicitly allows only pushes or manual baseline runs on `main`. No failure scenario is deployed, even if its tests unexpectedly pass. The repository source and public app keep their normal controls. Run `baseline` to compare normal behavior (an eligible baseline on `main` can deploy).
 
 This compares two code states in isolated runners. Use actual test and scanner results as classroom evidence.
 
