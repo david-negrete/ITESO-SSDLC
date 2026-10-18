@@ -70,6 +70,8 @@ The tests job changes only its own temporary checkout and shows the diff in **Ap
 
 This compares two code states in isolated runners. Use actual test and scanner results as classroom evidence.
 
+Additional isolated scenarios cover logout revocation, session expiration, previous-session invalidation on login, protected-field validation, administrator access, and cache policy. Choose them in the same scenario menu. Each changes only the tests job's temporary application copy. The optional `exercise_id` labels a run, for example `Classroom exercise 01`, without putting the scenario name in its title. Manually dispatched runs use separate concurrency groups so exercise runs can queue without replacing each other; push runs retain concurrency grouping by branch. Failure scenarios remain excluded from deployment regardless of test outcomes.
+
 ## Deploy on Render
 
 1. Import `render.yaml` as a Render Blueprint from the repository. Review the plan before creating the service. The file requests `free`, subject to availability on your account.
